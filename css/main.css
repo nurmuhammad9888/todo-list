@@ -1,0 +1,13 @@
+.check{
+    width: 15px;
+    height: 15px;
+    margin-left: 10px;
+}
+.check:checked ~ p{
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+.list{
+    width: 100%;
+    max-width: 800px;
+}
