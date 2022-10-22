@@ -10,6 +10,7 @@
 .check:checked ~ p{
     text-decoration: line-through;
     opacity: 0.5;
+    pointer-events: none;
 }
 .list{
     width: 100%;
