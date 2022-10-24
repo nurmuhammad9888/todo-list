@@ -1,63 +1,134 @@
+
 const elForm = document.querySelector(".form-js");
 const elInput = document.querySelector(".input-js");
 const elBtn = document.querySelector(".btn-js");
 const elList = document.querySelector(".list");
 
-let arry = [];
+const allCheck = document.querySelector(".allcheck");
+const checkedD = document.querySelector(".checkk");
+const ancheck = document.querySelector(".anchick");
 
-let textFunc = function(arr, listt){
-    listt.innerHTML = "";
+
+let newArray = [];
+let idTitle = 0;
+
+let MainFanuc = function(arry,list){
+    list.innerHTML = "";
     
-    for (const arrays of arr) {
-        let item = document.createElement("li");
+    let allNum = 0;
+    let cheked = 0;
+    let anChiked = 0;
+    
+    arry.forEach((arrays) => {
+        let = item = document.createElement("li");
         item.classList.add("d-flex", "align-items-center","mx-auto", "mt-3", "bg-secondary", "justify-content-between","py-2", "rounded")
         
-        let checkbox = document.createElement("input");
-        checkbox.type = "checkbox"
-        checkbox.classList.add("check")
-        item.appendChild(checkbox);
+        let = check = document.createElement("input");
+        check.type = "checkbox";
+        check.name = "checkbox";
+        check.dataset.id = arrays.id;
+        check.classList.add("check","chekbbox-check");
+        item.appendChild(check)
         
-        let text = document.createElement("p");
-        text.textContent = arrays.textName;
+        let = text = document.createElement("p");
         text.classList.add("text-white", "fs-5" ,"text-center", "mb-0")
+        text.textContent = arrays.textName;
         item.appendChild(text);
         
-        let btnDelete = document.createElement("button");
-        btnDelete.textContent = "Delete";
-        btnDelete.type = "button";
-        btnDelete.classList.add("btn-delete");
-        btnDelete.classList.add("btn","btn-danger" ,"text-white")
-        btnDelete.dataset.id = arrays.id;
-
-        let btnIdet = document.createElement("button");
-        btnIdet.textContent = "Idet";
-        btnIdet.type = "button";
-        btnIdet.classList.add("btn","btn-info" ,"text-white","mx-2")
-
+        if(arrays.isComplate){
+            text.style.textDecoration = "line-through";
+            check.setAttribute("checked", "")
+            cheked++
+        }else{
+            check.removeAttribute("checked");
+            anChiked++
+        }
+        let = btnDell = document.createElement("button");
+        btnDell.type = "button";
+        btnDell.dataset.id = arrays.id
+        btnDell.textContent = "Delete";
+        btnDell.classList.add("btn","btn-danger" ,"text-white");
+        btnDell.classList.add("delet")
+        item.appendChild(btnDell);
+        
+        let = btnIdet = document.createElement("button");
+        btnIdet.type = "button"
+        btnIdet.dataset.id = arrays.id
+        btnIdet.textContent = "Edet";
+        btnIdet.classList.add("idet")
+        btnIdet.classList.add("btn","btn-info" ,"text-white","mx-2");
+        item.appendChild(btnIdet);
+        
         let div = document.createElement("div");
-        div.appendChild(btnDelete);
+        div.appendChild(btnDell);
         div.appendChild(btnIdet);
+        elList.appendChild(item);
         item.appendChild(div)
-        elList.appendChild(item)
-    }
+        allNum++;
+    });
+    allCheck.textContent = allNum;
+    checkedD.textContent = anChiked;
+    ancheck.textContent = cheked;
 }
 
-elForm.addEventListener("submit", function(evt){
+let formTaypes ={
+    SAVE:"save",
+    EDIT:"edit"
+}
+
+let formType = formTaypes.SAVE;
+let editingId = null;
+
+elForm.addEventListener("submit", (evt) => {
     evt.preventDefault();
-    
-    arry.push({
-        textName:elInput.value,
-        id:arry[arry.length -1]?.id + 1 || 1,
-    })
-    
-    elForm.reset();
-    textFunc(arry, elList);
-})
-elList.addEventListener("click", (evt) =>{
-    if (evt.target.matches(".btn-delete")) {
-        let btnDeleteId = Number(evt.target.dataset.id);
-        let foundIndex = arry.findIndex((todo) => todo.id === btnDeleteId);
-        arry.splice(foundIndex, 1);
-        textFunc(arry, elList)
+    if(formType === formTaypes.SAVE){
+        newArray.push({
+            textName: elInput.value,
+            id: ++idTitle,
+            isComplate: false,
+        })
+        MainFanuc(newArray, elList)
+        elForm.reset();    
     }
+    
+    if(formType === formTaypes.EDIT){
+        let editt = {
+            id:editingId,
+            textName:elInput.value,
+        };
+        let editingIdFoundIndex = newArray.findIndex(nur => nur.id === editt.id);
+        
+        newArray.splice(editingIdFoundIndex, 1, editt)
+        MainFanuc(newArray, elList);
+        formType = formTaypes.SAVE;
+        elBtn.textContent = "Add";
+        elForm.reset();
+    }
+})
+
+elList.addEventListener("click", (evt) => {
+    if(evt.target.matches(".delet")){
+        let deletId = Number(evt.target.dataset.id)
+        let index = newArray.findIndex(nurM => nurM.id === deletId)
+        newArray.splice(index, 1)
+        MainFanuc(newArray, elList)
+    }
+    
+    if(evt.target.matches(".idet")){
+        let idetId = Number(evt.target.dataset.id);
+        let idetIndex = newArray.find(nur => nur.id === idetId)
+        console.log(idetId);
+        elInput.value = idetIndex.textName;
+        elBtn.textContent = "Edit";
+        editingId = idetIndex.id;
+        formType = formTaypes.EDIT;
+    }
+    if(evt.target.matches(".chekbbox-check")){
+        let checkId = Number(evt.target.dataset.id);
+        let checIndex = newArray.find((chek) => chek.id == checkId);
+        
+        checIndex.isComplate = !checIndex.isComplate;
+        MainFanuc(newArray, elList)
+    }
+    
 })

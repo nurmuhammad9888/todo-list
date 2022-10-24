@@ -1,4 +1,5 @@
-.wrap{
+.wrap,
+.numbers{
     width: 100%;
     max-width: 800px;
 }
@@ -7,12 +8,18 @@
     height: 15px;
     margin-left: 10px;
 }
-.check:checked ~ p{
-    text-decoration: line-through;
-    opacity: 0.5;
-    pointer-events: none;
-}
 .list{
     width: 100%;
     max-width: 800px;
 }
+
+/* .allcheck {
+    width: 100%;
+    
+}
+.check {
+    width: 100%;
+}
+.anchick {
+    width: 100%;
+} */
